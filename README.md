@@ -33,7 +33,7 @@ Free energy landscape (FEL) of the allosteric inhibitor of the NS2B / NS3 dimer 
 
 ### LIG 
 
- <img src="img/FES_LIG_dengue.png" width="800" height="400"> 
+ <img src="img/FES_LIG_dengue.png" width="600" height="500"> 
 
 * ```script PCA_dengue.R ```
 

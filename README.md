@@ -51,8 +51,8 @@ Principal component analysis (PCA) of NS2B/NS3 system in Apo (black) and Holo (g
 
 ### NS2B 
 
-<img src="img/acumulative_NS2B.png" width="800" height="400">
+<img src="img/acumulative_NS2B.png" width="700" height="500">
 
 ### NS3  
 
-<img src="img/acumulative_NS2B.png" width="800" height="400">
+<img src="img/acumulative_NS2B.png" width="700" height="500">

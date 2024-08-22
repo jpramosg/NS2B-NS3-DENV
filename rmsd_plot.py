@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt 
 import numpy as np 
 import seaborn as sns 
- 
+from matplotlib.gridspec import GridSpec
 ## indicate path 
 
 path = r"/home/jpramosg/Desktop/MD/dengue/data/APO/results_analysis/"
@@ -69,26 +69,55 @@ colors = sns.color_palette("rocket", 3)
 seshadri = ["#c3121e", "#0348a1", "#ffb01c", "#027608", "#0193b0"]
 
 
-fig = plt.figure(1, figsize=(10, 5))
-plt.plot(x_NS3, y_avg_NS3, linestyle ="-", label = "NS3 Apo ", color = colors[0], mfc = "w", linewidth=1 )
-plt.plot(x_NS3Ho, y_avg_NS3Ho, linestyle ="-", label = "NS3 Holo ", color = colors[1], mfc = "w", linewidth=1 )
-#plt.plot(x1, y3, linestyle ="-", label = "NS2B R3", color = colors[2], mfc = "w", markersize=8 )
+fig = plt.figure(figsize=(10, 5))
+gs = GridSpec(4, 4, hspace=0.4, wspace=0.0)  # Reduced wspace to bring the density plot closer
 
-#plot params
-plt.xlim([2,300]) ## range of values in x-axis 
-plt.ylim([0,4]) ## range of values in y-axis 
-plt.minorticks_on() ## between ranges 0 to 5, show little lines 
-plt.tick_params(labelsize=14) ## size of numbers in axis 
-xticks = np.arange(0,300.1,100) ## create a matrix with values 
+ax_main = fig.add_subplot(gs[:, :-1])
+ax_density = fig.add_subplot(gs[:, -1], sharey=ax_main)
 
-plt.tick_params(direction="in", which="minor", length=4.5) ## size of lines minor in axis 
-plt.tick_params(direction="in", which="major", length=9) ## size of lines major in axis 
-plt.xticks(xticks)
+# Main plot
+ax_main.plot(x_NS3, y_avg_NS3, linestyle ="-", label = "NS3 Apo", color = colors[0], linewidth=1)
+ax_main.plot(x_NS3Ho, y_avg_NS3Ho, linestyle ="-", label = "NS3 Holo", color = colors[2], linewidth=1)
 
-plt.xlabel(r"Time [ns]", fontsize = 14)
-plt.ylabel(r"RMSD [$\mathrm{\AA}$]", fontsize = 14)
+ax_main.set_xlim([2, 300])
+ax_main.set_ylim([0, 4])
+ax_main.minorticks_on()
+ax_main.tick_params(labelsize=14)
+xticks = np.arange(0, 300.1, 100)
+yticks = np.arange(0, 6.1, 1)
+ax_main.set_xticks(xticks)
+ax_main.set_yticks(yticks)
 
-plt.legend(fontsize=14)
 
+ax_main.tick_params(direction="in", which="minor", length=3.0)
+ax_main.tick_params(direction="in", which="major", length=8)
+
+ax_main.set_xlabel(r"Time [ns]", fontsize=14,  weight='bold') 
+ax_main.set_ylabel(r"RMSD [$\mathrm{\AA}$]", fontsize=14,  weight='bold')
+
+legend = ax_main.legend(fontsize=14, loc="upper left", handlelength=1, frameon=False )
+
+for legend_handle in legend.get_lines():
+    legend_handle.set_linewidth(9.0)
+
+sns.kdeplot(y=y_avg_NS3, ax=ax_density, color = colors[0], fill=True)
+sns.kdeplot(y=y_avg_NS3Ho, ax=ax_density, color = colors[2], fill=True)
+
+#sns.kdeplot(y_avg_NS3, ax=ax_density, color="red", vertical=True, fill=True)
+#sns.kdeplot(y_avg_NS3Ho, ax=ax_density, color="blue", vertical=True, fill=True)
+
+# Remove ticks and borders from the density plot
+ax_density.tick_params(axis='y', which='both', left=False, right=False, labelleft=False)
+ax_density.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
+ax_density.set_xlabel('')
+ax_density.set_ylabel('')
+#ax_density.set_yticks([])
+
+
+# Remove borders from the density plot
+ax_density.spines['top'].set_visible(False)
+ax_density.spines['right'].set_visible(False)
+ax_density.spines['bottom'].set_visible(False)
+ax_density.spines['left'].set_visible(True)  # Ensure no y-ticks on the density plot
 
 plt.savefig("/home/jpramosg/Desktop/MD/dengue/plots/RMSD_NS3.png", dpi = 300, bbox_inches="tight")
